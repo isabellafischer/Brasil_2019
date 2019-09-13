@@ -1,0 +1,32 @@
+# Isabella Fischer
+
+library(tidyverse)
+
+coord = read_csv("http://vincentarelbundock.github.io/Rdatasets/csv/boot/brambles.csv")
+set.seed(3)
+coordinates = as.matrix(select(coord, x, y))
+
+coords2 = kmeans(coordinates, centers = 2, algorithm = "Forgy", iter.max = 1000)
+coords3 = kmeans(coordinates, centers = 3, algorithm = "Forgy", iter.max = 1000)
+coords4 = kmeans(coordinates, centers = 4, algorithm = "Forgy", iter.max = 1000)
+coords5 = kmeans(coordinates, centers = 5, algorithm = "Forgy", iter.max = 1000)
+coords6 = kmeans(coordinates, centers = 6, algorithm = "Forgy", iter.max = 1000)
+coords7 = kmeans(coordinates, centers = 7, algorithm = "Forgy", iter.max = 1000)
+coords8 = kmeans(coordinates, centers = 8, algorithm = "Forgy", iter.max = 1000)
+coords9 = kmeans(coordinates, centers = 9, algorithm = "Forgy", iter.max = 1000)
+coords10 = kmeans(coordinates, centers = 10, algorithm = "Forgy", iter.max = 1000)
+coords11 = kmeans(coordinates, centers = 11, algorithm = "Forgy", iter.max = 1000)
+coords12 = kmeans(coordinates, centers = 12, algorithm = "Forgy", iter.max = 1000)
+coords13 = kmeans(coordinates, centers = 13, algorithm = "Forgy", iter.max = 1000)
+coords14 = kmeans(coordinates, centers = 14, algorithm = "Forgy", iter.max = 1000)
+coords15 = kmeans(coordinates, centers = 15, algorithm = "Forgy", iter.max = 1000)
+coords16 = kmeans(coordinates, centers = 16, algorithm = "Forgy", iter.max = 1000)
+coords17 = kmeans(coordinates, centers = 17, algorithm = "Forgy", iter.max = 1000)
+coords18 = kmeans(coordinates, centers = 18, algorithm = "Forgy", iter.max = 1000)
+coords19 = kmeans(coordinates, centers = 19, algorithm = "Forgy", iter.max = 1000)
+coords20 = kmeans(coordinates, centers = 20, algorithm = "Forgy", iter.max = 1000)
+totwith = cbind(coords2$tot.withinss, coords3$tot.withinss, coords4$tot.withinss, coords5$tot.withinss, coords6$tot.withinss, coords7$tot.withinss, coords8$tot.withinss, coords9$tot.withinss, coords10$tot.withinss, coords11$tot.withinss, coords12$tot.withinss, coords13$tot.withinss, coords14$tot.withinss, coords15$tot.withinss, coords16$tot.withinss, coords17$tot.withinss, coords18$tot.withinss, coords19$tot.withinss, coords20$tot.withinss)
+btss = cbind(coords2$betweenss, coords3$betweenss, coords4$betweenss, coords5$betweenss, coords6$betweenss, coords7$betweenss, coords8$betweenss, coords9$betweenss, coords10$betweenss, coords11$betweenss, coords12$betweenss, coords13$betweenss, coords14$betweenss, coords15$betweenss, coords16$betweenss, coords17$betweenss, coords18$betweenss, coords19$betweenss, coords20$betweenss)
+
+resp = c(20, 20)
+print(resp)

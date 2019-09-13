@@ -1,0 +1,20 @@
+# Isabella Fischer
+
+library(tidyverse)
+swabs = read_tsv("https://osf.io/sh75w/download")
+counts = read_tsv("https://osf.io/vjcdt/download")
+taxa = read_tsv("https://osf.io/z4bfu/download")
+
+swabsOfInterest =select(swabs,swab.id)
+swabsOfInterestCounts =inner_join(swabsOfInterest, counts)
+
+gatheredCounts = gather(swabsOfInterestCounts, otu, count, taxa0:taxa23)
+
+summarizedCounts = gatheredCounts %>% 
+  select(otu,count) %>% 
+  group_by(otu) %>% 
+  summarise(count = sum(count))
+
+taxaSummary = inner_join(summarizedCounts, taxa,by= c("otu" = "taxa.id"))
+print(taxaSummary,na.print="<NA>")
+
