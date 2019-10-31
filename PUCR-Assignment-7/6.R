@@ -1,18 +1,18 @@
 # Isabella Fischer
 
 library(tidyverse)
-library(ggplot2)
-library(readr)
-library(broom)
-
 data(state)
 state <- data.frame(state.x77, state.region)
 
-lm_resultm6 = lm(Illiteracy~ Life.Exp+Population + Income  + Murder + HS.Grad + Frost + Area + state$state.region, data=state)
+cor_vec_names<-c()
+state_names<-names(state)[-3]
 
-t =lm_resultm6$coefficients
-tidy_lm_resultm = tidy(lm_resultm6)
+for(i in state_names){
+  if(is.numeric(state[,i])){
+    if(abs(cor(state$Illiteracy,state[,i]))>0.5){
+      cor_vec_names<-cbind(cor_vec_names,i)
+    }
+  }
+}
 
-
-lm_summarym = summary.lm(lm_resultm6)
-print(lm_summarym$adj.r.squared)
+print(as.character(cor_vec_names))
