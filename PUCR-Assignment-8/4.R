@@ -1,53 +1,39 @@
 # Isabella Fischer
-
 library(tidyverse)
-library(ggplot2)
-library(readr)
-library(dplyr)
-
 
 sampleData = read_tsv("https://osf.io/r4kn2/download")
 chr22Data = read_tsv("https://osf.io/5nkzc/download")
 chrXData = read_tsv("https://osf.io/cwnez/download")
 
-sampleData= sampleData %>% 
-  filter(Population %in% c("CEU","YRI","GWD","ASW","GBR","TSI","CHS","JPT"))
-
-print(dim(sampleData))
+sampleData = sampleData %>%
+  filter(Population == "CEU" | Population == "YRI" | Population == "GWD" |
+           Population == "ASW" | Population == "GBR" | Population == "TSI" |
+           Population == "CHS" | Population == "JPT")
 
 populationData = sampleData %>% 
   group_by(Population) %>% 
-  tally()
+  summarise(Count = length(SampleID))
 
-print(populationData)
+chr22Data = semi_join(chr22Data, sampleData, by = "SampleID")
+chr22Data$SampleID = NULL
+chr22Data = as.matrix(chr22Data)
 
-chr22Data = chr22Data %>% 
-  filter(SampleID %in% sampleData$SampleID) %>% 
-  select(-SampleID)
+chrXData = semi_join(chrXData, sampleData, by = "SampleID")
+chrXData$SampleID = NULL
+chrXData = as.matrix(chrXData)
 
+chr22PC = prcomp(chr22Data)
+pcchr22PC = as_tibble(chr22PC$x)
 
-a = as.matrix(chr22Data)
+percentVE = 100 * chr22PC$sdev^2 / sum(chr22PC$sdev^2)
+percentVEDataFrame = data.frame(PC = 1:4, PercentExplained = percentVE[1:4])
 
-chrXData = chrXData %>% 
-  filter(SampleID %in% sampleData$SampleID) %>% 
-  select(-SampleID)
-
-
-a = as.matrix(chrXData)
-
-chr22PC =prcomp(chr22Data)
-percentVE = 100 *  chr22PC$sdev^2 / sum(chr22PC$sdev^2)
-
-
-percentVE=as_tibble(percentVE)
-
-percentVEDataFrame <- data.frame(PC=1:4, PercentExplained=percentVE[1:4])
-view(percentVEDataFrame)
-
-ggplot(percentVEDataFrame, aes(PC, PercentExplained, fill=PC)) + 
-  geom_bar(stat="identity") +
-  xlab("Principal Component") +
-  ylab("% Variance explained") 
+ggplot(percentVEDataFrame, aes(PC, PercentExplained)) + 
+  geom_bar(stat = "identity") +
+  xlab("Principal component") +
+  ylab("% variance explained") +
+  theme_bw() +
+  theme(legend.position = "none")
 
 ggsave("4.png")
 
