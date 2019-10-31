@@ -1,37 +1,36 @@
 # Isabella Fischer
 
 library(tidyverse)
-library(ggplot2)
-library(readr)
-library(dplyr)
 
-sampleData = read_tsv("https://osf.io/r4kn2/download")
-chr22Data = read_tsv("https://osf.io/5nkzc/download")
-chrXData = read_tsv("https://osf.io/cwnez/download")
+sampleData<-as_tibble(read_tsv("https://osf.io/r4kn2/download"))
+chr22Data<-as_tibble(read_tsv("https://osf.io/5nkzc/download"))
+chrXData<-as_tibble(read_tsv("https://osf.io/cwnez/download"))
 
-sampleData= sampleData %>% 
-  filter(Population %in% c("CEU","YRI","GWD","ASW","GBR","TSI","CHS","JPT"))
-
+sampleData<-filter(sampleData, Population=="CEU"|
+                     Population=="YRI"|
+                     Population=="GWD"|
+                     Population=="ASW"|
+                     Population=="GBR"|
+                     Population=="TSI"|
+                     Population=="CHS"|
+                     Population=="JPT")
 print(dim(sampleData))
 
-populationData = sampleData %>% 
-  group_by(Population) %>% 
-  tally()
+sampleData %>% 
+  group_by(Population) %>%
+  summarize(Count=length(Population)) %>%
+  print()
 
-print(populationData)
+chr22Data<-chr22Data %>%
+  inner_join(select(sampleData,SampleID),by="SampleID") %>%
+  select(2:length(chr22Data)) %>%
+  as.matrix()
+print(chr22Data[1:3,1:3])  
 
-chr22Data = chr22Data %>% 
-  filter(SampleID %in% sampleData$SampleID) %>% 
-  select(-SampleID)
-
-a = as.matrix(chr22Data)
-print(a[1:3,1:3])
-
-chrXData = chrXData %>% 
-  filter(SampleID %in% sampleData$SampleID) %>% 
-  select(-SampleID)
-
-a = as.matrix(chrXData)
-print(a[1:3,1:3])
+chrXData<-chrXData %>%
+  inner_join(select(sampleData,SampleID),by="SampleID") %>%
+  select(2:length(chrXData)) %>%
+  as.matrix()
+print(chrXData[1:3,1:3])
 
 
